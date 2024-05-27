@@ -1,34 +1,67 @@
-# Used Compiler
-CXX=g++
+# ============================================================================
+# COMPILER CONFIGURATION
+# ============================================================================
+COMPILER=g++
+FILE_SUFFIX=cc
 
-# Compiler Flags 
-# 	-Wall Enables Compiler Warning Messagse 
-# 	-Wextra for Additional Warnings
-# 	-02 Optimizes Code
-# 	-pedantic-errors Enforces C++ Language Standards.
-# 	-Werror (Warnings as Errors)
+# ============================================================================
+# LIBRARIES AND PATHS
+# ============================================================================
 
-FLAGS=-std=c++23 -O2 -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Werror -pedantic-errors
-DEBUG=-std=c++23 -ggdb -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Werror -pedantic-errors
+PLOG_PATH=-I/home/haspe/Development/cpp-lib/plog-master/include
 
-SRCS=src/main.cpp src/calculator.cpp
-OBJS=$(notdir $(SRCS:.cpp=.o))
+# ============================================================================
+# COMPILER FLAGS
+# ============================================================================
 
-debug:
-	$(CXX) $(DEBUG) $(SRCS)
-	gdb a.out
-.PHONY: run
+FLAGS=-std=c++23 -O2 -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Werror -pedantic-errors $(PLOG_PATH)
+DEBUG=-std=c++23 -ggdb -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Werror -pedantic-errors $(PLOG_PATH)
+EXT_FLAGS=-std=c++23 -O2 -Wall -Wextra -Wconversion -Wsign-conversion $(PLOG_PATH)
 
-compile:
-	$(CXX) $(FLAGS) -c $(SRCS)
-.PHONY: compile
+# ============================================================================
+# SOURCE FILES AND OBJECTS
+# ============================================================================
+
+SOURCE_FILES=$(wildcard src/*.cc)
+OBJECT_FILES=$(notdir $(SOURCE_FILES:.$(FILE_SUFFIX)=.o))
+
+# ============================================================================
+# PHONY TARGETS
+# ============================================================================
+
+.PHONY: compile run clean debug generate_commands
+
+# ============================================================================
+# COMPILATION RULES
+# ============================================================================
+
+main.o: src/main.cc
+	$(COMPILER) $(EXT_FLAGS) -c $< -o $@
+
+calculator.o: src/calculator.cc
+	$(COMPILER) $(FLAGS) -c $< -o $@
+
+# ============================================================================
+# HIGH-LEVEL BUILD TARGETS
+# ============================================================================
+
+compile: main.o calculator.o
 
 run: compile
-	$(CXX) $(FLAGS) -o main $(OBJS)
+	$(COMPILER) $(FLAGS) -o main $(OBJECT_FILES)
 	./main
-.PHONY: run
 
 clean:
-	rm -rf main $(OBJS)
-.PHONY: clean
+	rm -rf main $(OBJECT_FILES)
+
+debug:
+	$(COMPILER) $(DEBUG) $(SOURCE_FILES)
+	gdb a.out
+
+# ============================================================================
+# AUXILIARY TOOLS
+# ============================================================================
+
+generate_commands:
+	bear -- make compile
 
