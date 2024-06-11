@@ -2,7 +2,7 @@
 # COMPILER CONFIGURATION
 # ============================================================================
 COMPILER=g++
-FILE_SUFFIX=cc
+FILE_SUFFIX=cpp
 
 # ============================================================================
 # LIBRARIES AND PATHS
@@ -15,14 +15,14 @@ PLOG_PATH=-I/home/haspe/Development/cpp-lib/plog-master/include
 # ============================================================================
 
 FLAGS=-std=c++23 -O2 -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Werror -pedantic-errors $(PLOG_PATH)
-DEBUG=-std=c++23 -ggdb -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Werror -pedantic-errors $(PLOG_PATH)
+DEBUG=-std=c++23 -ggdb -O2 -Wall -Wextra -Wconversion -Wsign-conversion $(PLOG_PATH)
 EXT_FLAGS=-std=c++23 -O2 -Wall -Wextra -Wconversion -Wsign-conversion $(PLOG_PATH)
 
 # ============================================================================
 # SOURCE FILES AND OBJECTS
 # ============================================================================
 
-SOURCE_FILES=$(wildcard src/*.cc)
+SOURCE_FILES=$(wildcard src/*.cpp)
 OBJECT_FILES=$(notdir $(SOURCE_FILES:.$(FILE_SUFFIX)=.o))
 
 # ============================================================================
@@ -35,10 +35,10 @@ OBJECT_FILES=$(notdir $(SOURCE_FILES:.$(FILE_SUFFIX)=.o))
 # COMPILATION RULES
 # ============================================================================
 
-main.o: src/main.cc
+main.o: src/main.cpp
 	$(COMPILER) $(EXT_FLAGS) -c $< -o $@
 
-calculator.o: src/calculator.cc
+calculator.o: src/calculator.cpp
 	$(COMPILER) $(FLAGS) -c $< -o $@
 
 # ============================================================================
