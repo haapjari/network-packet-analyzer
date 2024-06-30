@@ -1,32 +1,40 @@
 #include <cstdlib>
 #include <iostream>
+#include <thread>
 
 #include <plog/Log.h>
 #include <plog/Initializers/RollingFileInitializer.h>
 
 #include "calculator.hpp"
 
+void loopFunction1() {
+    for (int i = 0; i < 5; ++i) {
+        std::cout << "Loop 1 - Iteration " << i << std::endl;
+    }
+}
+
+void loopFunction2() {
+    for (int i = 0; i < 5; ++i) {
+        std::cout << "Loop 2 - Iteration " << i << std::endl;
+    }
+}
 
 int main() {
-	// Initialize the Logger
-	plog::init(plog::debug, "Logfile.txt"); // Step 2: initialize the logger
+	// plog::init(plog::debug, "Logfile.txt"); // Step 2: initialize the logger
 
-	PLOGD << "main() called";
+	// PLOGD << "main() called";
 	
-	Calculator calc;
+	// Calculator calc;
 
-	std::cout << "The sum of 3 and 4 is " << calc.add(3, 4) << ".\n";
-	
-    std::cout << std::left; // left justify output
-    std::cout << std::setw(16) << "bool:" << sizeof(bool) << " bytes\n";
-    std::cout << std::setw(16) << "char:" << sizeof(char) << " bytes\n";
-    std::cout << std::setw(16) << "short:" << sizeof(short) << " bytes\n";
-    std::cout << std::setw(16) << "int:" << sizeof(int) << " bytes\n";
-    std::cout << std::setw(16) << "long:" << sizeof(long) << " bytes\n";
-    std::cout << std::setw(16) << "long long:" << sizeof(long long) << " bytes\n";
-    std::cout << std::setw(16) << "float:" << sizeof(float) << " bytes\n";
-    std::cout << std::setw(16) << "double:" << sizeof(double) << " bytes\n";
-    std::cout << std::setw(16) << "long double:" << sizeof(long double) << " bytes\n";
+	std::thread t1(loopFunction1);
+    std::thread t2(loopFunction2);
 
-	return EXIT_SUCCESS;
+    // Wait for both threads to finish
+    t1.join();
+    t2.join();
+
+	std::cout << sizeof(std::int64_t) << std::endl;
+
+	// return EXIT_SUCCESS;
+	return 0;
 }
